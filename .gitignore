@@ -1,14 +1,31 @@
-Binaries
-DerivedDataCache
-Intermediate
-Saved
-.vscode
-.vs
-*.VC.db
-*.opensdf
-*.opendb
-*.sdf
+# Ignore build and temporary files
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Ignore user-specific config files
+Config/DefaultEditorPerProjectUserSettings.ini
+Config/DefaultEditorUserSettings.ini
+Config/GameUserSettings.ini
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE-specific files (if using Visual Studio or JetBrains Rider)
 *.sln
+*.vcxproj*
 *.suo
-*.xcodeproj
-*.xcworkspace
+*.user
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
+
+# Ignore Visual Studio folder and database files
+.vs/
+*.VC.db
+
