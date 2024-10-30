@@ -18,7 +18,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 APumpChestTheGameCharacter::APumpChestTheGameCharacter()
 {
-	// Set size for collision capsule
+	// Set size for collision capsule - test
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
