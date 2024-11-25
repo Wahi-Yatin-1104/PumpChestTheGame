@@ -6,7 +6,7 @@
 
 UCLASS()
 class LOCALTESTING_API ANpcGen : public ACharacter
-{   //ALTER THIS to the name of the game, LOCALTESTING is my local run
+{
     GENERATED_BODY()
 
 public:
@@ -18,42 +18,104 @@ protected:
 public:
     virtual void Tick(float DeltaTime) override;
 
-    //NPC run in circles, Use for testing
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void MoveInCircles(float DeltaTime);
 
-    // Function to display a random text box above the NPC's head
     UFUNCTION(BlueprintCallable, Category = "UI")
     void DisplayRandomTextBox(float Duration);
 
-    // follows player ideally
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void FollowAndStop(ACharacter* PlayerCharacter);
 
-    // default for move
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void ResumeMovement();
 
-    //I hate that this isnt working
     UFUNCTION(BlueprintCallable, Category = "UI")
     void HideTextBox();
 
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void Patrol();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void GreetPlayer();
+
+    UFUNCTION(BlueprintCallable, Category = "Combat")
+    void TakeDamage(float DamageAmount);
+
+    UFUNCTION(BlueprintCallable, Category = "Combat")
+    void Die();
+
+    void Jump() override;
+
+    //void Tbag(); maybe . . 
+
+    void StandUp();
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void Wander();
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void Stop();
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void RotateTowards(FVector TargetLocation);
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void LookAtPlayer(ACharacter* PlayerCharacter);
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void RandomMovement();
+
+    UFUNCTION(BlueprintCallable, Category = "Behavior")
+    void IdleBehavior();
+
+    UFUNCTION(BlueprintCallable, Category = "Environment")
+    void InteractWithEnvironment();
+
+    UFUNCTION(BlueprintCallable, Category = "Dialogue")
+    void StartDialogue();
+
+    UFUNCTION(BlueprintCallable, Category = "Health")
+    void RegenerateHealth();
+
+    UFUNCTION(BlueprintCallable, Category = "Alert")
+    void Alert();
+
+    UFUNCTION(BlueprintCallable, Category = "Flee")
+    void FleeFromDanger();
+
+    UFUNCTION(BlueprintCallable, Category = "Tasks")
+    void PerformTask();
+
 private:
-    // speed of the NPC
     UPROPERTY(EditAnywhere, Category = "Movement")
     float WalkSpeed;
 
-    // rotates the npc towards a direction
     UPROPERTY(EditAnywhere, Category = "Movement")
     float RotationSpeed;
 
-    //display text box
     UPROPERTY(VisibleAnywhere, Category = "UI")
     class UWidgetComponent* TextBoxWidget;
 
-    // Timers/texts, in development
     FTimerHandle TextBoxTimerHandle;
     FTimerHandle StopTimerHandle;
     UPROPERTY(EditAnywhere, Category = "Text")
     TArray<FString> TextMessages;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    TArray<AActor*> PatrolWaypoints;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float Health;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float MaxHealth;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float WanderRadius;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float WanderInterval;
+
+    FTimerHandle WanderTimerHandle;
 };
