@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "LocalTestingCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
@@ -13,7 +11,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+#include "MyHUD.h"
+
+//DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
 // ALocalTestingCharacter
@@ -88,6 +88,8 @@ void ALocalTestingCharacter::BeginPlay()
         {
             Subsystem->AddMappingContext(DefaultMappingContext, 0);
         }
+        MyHUD = Cast<AMyHUD>(PlayerController->GetHUD());
+
     }
 }
 
@@ -109,7 +111,7 @@ void ALocalTestingCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
     }
     else
     {
-        UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+        //UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
     }
 }
 
@@ -150,10 +152,8 @@ void ALocalTestingCharacter::Look(const FInputActionValue& Value)
 
 void ALocalTestingCharacter::Interact()
 {
-   
-    UE_LOG(LogTemplateCharacter, Log, TEXT("Interact key pressed"));
+    //UE_LOG(LogTemplateCharacter, Log, TEXT("Interact key pressed"));
 }
-
 
 void ALocalTestingCharacter::StartJump()
 {
@@ -165,7 +165,6 @@ void ALocalTestingCharacter::StopJump()
     bPressedJump = false;
 }
 
-
 void ALocalTestingCharacter::StartCrouch()
 {
     Crouch();
@@ -176,28 +175,25 @@ void ALocalTestingCharacter::StopCrouch()
     UnCrouch();
 }
 
-
 void ALocalTestingCharacter::UpdateStats()
 {
-    
+    // Update character stats logic
 }
-
 
 void ALocalTestingCharacter::ApplyDamage(float DamageAmount)
 {
     Health -= DamageAmount;
     if (Health <= 0.0f)
     {
-        //currently unstable
+        // Handle character death
     }
 }
-
 
 void ALocalTestingCharacter::RegenerateHealth(float DeltaTime)
 {
     if (Health < MaxHealth)
     {
-        Health += 5.0f * DeltaTime; 
+        Health += 5.0f * DeltaTime;
         if (Health > MaxHealth)
         {
             Health = MaxHealth;
@@ -205,18 +201,15 @@ void ALocalTestingCharacter::RegenerateHealth(float DeltaTime)
     }
 }
 
-
 void ALocalTestingCharacter::PerformMeleeAttack()
 {
-   
-}
 
+}
 
 void ALocalTestingCharacter::PerformRangedAttack()
 {
-    
-}
 
+}
 
 bool ALocalTestingCharacter::IsInMeleeRange(AActor* Target)
 {
@@ -227,7 +220,6 @@ bool ALocalTestingCharacter::IsInMeleeRange(AActor* Target)
     }
     return false;
 }
-
 
 bool ALocalTestingCharacter::IsInRangedRange(AActor* Target)
 {
@@ -242,31 +234,28 @@ bool ALocalTestingCharacter::IsInRangedRange(AActor* Target)
 void ALocalTestingCharacter::GainExperience(int32 Points)
 {
     ExperiencePoints += Points;
-    if (ExperiencePoints >= Level * 100) 
+    if (ExperiencePoints >= Level * 100)
     {
         Level++;
         ExperiencePoints = 0;
-        
-        UE_LOG(LogTemplateCharacter, Log, TEXT("Leveled up to Level %d"), Level);
+
+        //UE_LOG(LogTemplateCharacter, Log, TEXT("Leveled up to Level %d"), Level);
     }
 }
-
 
 void ALocalTestingCharacter::UseItem(FString ItemName)
 {
     if (Inventory.Contains(ItemName))
     {
-        
         Inventory.Remove(ItemName);
-        UE_LOG(LogTemplateCharacter, Log, TEXT("Used item: %s"), *ItemName);
+        //UE_LOG(LogTemplateCharacter, Log, TEXT("Used item: %s"), *ItemName);
     }
 }
-
 
 void ALocalTestingCharacter::EquipArmor(float ArmorValue)
 {
     Armor = ArmorValue;
-    UE_LOG(LogTemplateCharacter, Log, TEXT(" Armor with value: %f"), Armor);
+    //UE_LOG(LogTemplateCharacter, Log, TEXT("Equipped armor with value: %f"), Armor);
 }
 
 bool ALocalTestingCharacter::CheckCriticalHit()
@@ -279,9 +268,43 @@ float ALocalTestingCharacter::ApplyCriticalHitDamage(float BaseDamage)
 {
     if (CheckCriticalHit())
     {
-        UE_LOG(LogTemplateCharacter, Log, TEXT("Crit"));
+        //UE_LOG(LogTemplateCharacter, Log, TEXT("Critical hit!"));
         return BaseDamage * CriticalHitDamage;
     }
     return BaseDamage;
 }
 
+void ALocalTestingCharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    // Example: Update health and stamina
+     UpdateHealth(Health, MaxHealth);
+     UpdateStamina(Stamina, MaxStamina);
+}
+
+
+
+void ALocalTestingCharacter::UpdateHealth(float HealthValue, float MaxHealthValue)
+{
+    Health = HealthValue;
+    MaxHealth = MaxHealthValue;
+    
+    if (MyHUD)
+    {
+        MyHUD->UpdateHealthBar(Health, MaxHealth);
+    }
+    
+}
+
+void ALocalTestingCharacter::UpdateStamina(float StaminaValue, float MaxStaminaValue)
+{
+    Stamina = StaminaValue;
+    MaxStamina = MaxStaminaValue;
+    
+    if (MyHUD)
+    {
+        MyHUD->UpdateStaminaBar(Stamina, MaxStamina);
+    }
+    
+}

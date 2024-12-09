@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,16 +5,20 @@
 #include "Logging/LogMacros.h"
 #include "LocalTestingCharacter.generated.h"
 
+
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class AMyHUD;
+
 struct FInputActionValue;
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config = Game)
-class ALocalTestingCharacter : public ACharacter
+class LOCALTESTING_API ALocalTestingCharacter : public ACharacter
 {
     GENERATED_BODY()
 
@@ -64,18 +66,6 @@ class ALocalTestingCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = "true"))
     float Armor;
 
-    // Mana of the character
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = "true"))
-    float Mana;
-
-    // Maximum mana of the character
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = "true"))
-    float MaxMana;
-
-    // Mana regeneration rate of the character
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = "true"))
-    float ManaRegenRate;
-
     // Critical hit chance of the character
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
     float CriticalHitChance;
@@ -110,6 +100,8 @@ public:
     /** Returns FollowCamera subobject **/
     FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+    virtual void Tick(float DeltaTime) override;
+
     // Function to handle character jump
     void StartJump();
     void StopJump();
@@ -143,6 +135,11 @@ public:
 
     float ApplyCriticalHitDamage(float BaseDamage);
 
+    // Function to update health 
+    void UpdateHealth(float Health, float MaxHealth);
+
+    // Function to update stamina 
+    void UpdateStamina(float Stamina, float MaxStamina);
 
 private:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = "true"))
@@ -188,4 +185,6 @@ private:
     class USkeletalMeshComponent* LegsMesh;
 
     FTimerHandle HealthRegenTimerHandle;
+
+    AMyHUD* MyHUD;
 };
