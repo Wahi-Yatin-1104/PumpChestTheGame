@@ -1,3 +1,4 @@
+//Saransh Beniwal
 #include "gameplayer.h"
 #include "Engine/Engine.h"
 
@@ -17,13 +18,13 @@ void UPlayer::check_level() {
     while(mystats.XPpoints >= mystats.PlayerLevel * 100) {
         mystats.PlayerLevel++;
         
-        //show level up message
+        //level up message
         if(GEngine) {
             GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
                 FString::Printf(TEXT("Level Up! Now level %d!"), mystats.PlayerLevel));
         }
         
-        //bonus every 5 levels
+        //bonus every 5 level- do not have 5 levels yet for 426
         if(mystats.PlayerLevel % 5 == 0) {
             mystats.BuffChest += 2;
             mystats.BuffGuns += 2;
@@ -57,7 +58,6 @@ bool UPlayer::canWorkout(FString muscle_group) {
 }
 
 void UPlayer::workout(const FString& type, int32 power) {
-    //check valid workout
     if(power <= 0) {
         UE_LOG(LogTemp, Warning, TEXT("Need more power bro!"));
         return;
@@ -70,7 +70,6 @@ void UPlayer::workout(const FString& type, int32 power) {
 
     workoutCount++;
 
-    // do the gains
     if(type == "chest") {
         addBuff(mystats.BuffChest, power);
         chest_cooldown = cd_time; //chest is okay
@@ -106,7 +105,7 @@ void UPlayer::superWorkout(const FString& type) {
 
     workout(type, 20);
     
-    //triple cooldown
+    //more cooldown
     if(type == "chest") chest_cooldown *= 3;
     if(type == "arms") armsCooldown *= 3;
     if(type == "legs") leg_cd *= 3;
@@ -219,7 +218,7 @@ void UPlayer::addTestLevels(int32 howmany) {
 }
 
 void UPlayer::printDebug() const {
-    UE_LOG(LogTemp, Warning, TEXT("=== DEBUG ==="));
+    UE_LOG(LogTemp, Warning, TEXT("DEBU"));
     UE_LOG(LogTemp, Warning, TEXT("cooldowns: %.1f %.1f %.1f"), 
         chest_cooldown, armsCooldown, leg_cd);
     UE_LOG(LogTemp, Warning, TEXT("workouts: %d"), workoutCount);

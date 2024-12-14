@@ -1,14 +1,12 @@
+//Saransh Beniwal
 #pragma once
-
 #include "CoreMinimal.h"
 #include "PStats.generated.h"
 
-//player stats struct
 USTRUCT(BlueprintType)
 struct FPStats {
     GENERATED_BODY()
 
-    //muscle buffs
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
     int32 BuffChest; //big chest
 
@@ -22,12 +20,10 @@ struct FPStats {
     int32 plevel; //current level
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats") 
-    int32 xp; //experience
+    int32 xp;
 
-    //constructor
     FPStats();
 
-    //main functions
     FString StatsToString() const;
     static FPStats LoadStats(const FString& data);
     void AddXP(int32 amount);

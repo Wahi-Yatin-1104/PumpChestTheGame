@@ -1,3 +1,4 @@
+//Saransh Beniwal
 #include "pstats.h"
 
 FPStats::FPStats() {
@@ -18,7 +19,6 @@ FPStats FPStats::LoadStats(const FString& data) {
     TArray<FString> parsed;
     data.ParseIntoArray(parsed, TEXT(","), true);
 
-    //making sure we have enough data
     if(parsed.Num() >= 5) {
         stats.BuffChest = FCString::Atoi(*parsed[0]);
         stats.BuffGuns = FCString::Atoi(*parsed[1]); 
@@ -44,7 +44,6 @@ FPStats FPStats::LoadStats(const FString& data) {
 void FPStats::AddXP(int32 amount) {
     xp += amount;
     
-    //need 1000 * level to level up
     while(xp >= plevel * 1000 && plevel < 99) {
         xp -= plevel * 1000;
         plevel++;
@@ -52,19 +51,19 @@ void FPStats::AddXP(int32 amount) {
 
     //cap xp at max
     if(plevel >= 99) {
-        xp = 99000;  //max xp cap
+        xp = 99000;
     }
 }
 
 void FPStats::IncreaseBuff(int32& buff, int32 amount) {
     buff += amount;
-    if(buff > 100)  //max buff is 100
+    if(buff > 100)
         buff = 100;
 }
 
 void FPStats::DecreaseBuff(int32& buff, int32 amount) {
     buff -= amount;
-    if(buff < 0)   //min buff is 0
+    if(buff < 0)
         buff = 0;
 }
 
@@ -77,7 +76,7 @@ bool FPStats::IsMaxed() {
 }
 
 void FPStats::Reset() {
-    //back to starting stats
+    //starting stats
     BuffChest = 0;
     BuffGuns = 0;
     BuffLegs = 0;
@@ -86,7 +85,6 @@ void FPStats::Reset() {
 }
 
 bool FPStats::IsValid() {
-    //check if stats are in valid range
     return BuffChest >= 0 && BuffChest <= 100 &&
            BuffGuns >= 0 && BuffGuns <= 100 && 
            BuffLegs >= 0 && BuffLegs <= 100 &&
@@ -97,10 +95,9 @@ bool FPStats::IsValid() {
 FString FPStats::GetRank() {
     float avg = (BuffChest + BuffGuns + BuffLegs) / 3.0f;
     
-    //return rank based on average buffs
     if(avg >= 90) return TEXT("Beast Mode");
     if(avg >= 75) return TEXT("Swole");
     if(avg >= 50) return TEXT("Getting Big");
-    if(avg >= 25) return TEXT("Newbie Gains");
-    return TEXT("Skipped Gym Day");
+    if(avg >= 25) return TEXT("Newbie Gains!!");
+    return TEXT("Skipped Gym Day NO NO!!!!");
 }
