@@ -1,4 +1,4 @@
-#include "PStats.h"
+#include "pstats.h"
 
 FPStats::FPStats() {
     BuffChest = 0;
