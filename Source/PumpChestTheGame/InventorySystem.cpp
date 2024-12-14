@@ -1,87 +1,46 @@
-// Written by Juno Suwanduan
-
 #include "InventorySystem.h"
-#include <fstream>
 
-InventoryItem::InventoryItem(const std::string& name, const std::string& description, int quantity, double weight)
-    : name(name), description(description), quantity(quantity), weight(weight) {}
-
-std::string InventoryItem::GetName() const {
-    return name;
+// Sets default values
+AInventorySystem::AInventorySystem()
+{
+    // Set this actor to call Tick() every frame
+    PrimaryActorTick.bCanEverTick = true;
 }
 
-std::string InventoryItem::GetDescription() const {
-    return description;
+// Called when the game starts or when spawned
+void AInventorySystem::BeginPlay()
+{
+    Super::BeginPlay();
 }
 
-int InventoryItem::GetQuantity() const {
-    return quantity;
+// Called every frame
+void AInventorySystem::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
 }
 
-double InventoryItem::GetWeight() const {
-    return weight;
+// Function to add an item to the inventory
+void AInventorySystem::AddItem(FString ItemName)
+{
+    InventoryItems.Add(ItemName);
+    UE_LOG(LogTemp, Log, TEXT("Added item: %s"), *ItemName);
 }
 
-void InventoryItem::AddQuantity(int amount) {
-    quantity += amount;
+// Function to remove an item from the inventory
+void AInventorySystem::RemoveItem(FString ItemName)
+{
+    InventoryItems.Remove(ItemName);
+    UE_LOG(LogTemp, Log, TEXT("Removed item: %s"), *ItemName);
 }
 
-void InventoryItem::RemoveQuantity(int amount) {
-    if (quantity >= amount) {
-        quantity -= amount;
-    }
+// Function to check if the inventory contains an item
+bool AInventorySystem::ContainsItem(FString ItemName) const
+{
+    return InventoryItems.Contains(ItemName);
 }
 
-void InventoryItem::SetWeight(double newWeight) {
-    weight = newWeight;
-}
-
-void InventorySystem::AddItem(const InventoryItem& item) {
-    items[item.GetName()] = item;
-}
-
-void InventorySystem::RemoveItem(const std::string& itemName) {
-    items.erase(itemName);
-}
-
-InventoryItem* InventorySystem::FindItem(const std::string& itemName) {
-    auto it = items.find(itemName);
-    return (it != items.end()) ? &it->second : nullptr;
-}
-
-void InventorySystem::DisplayInventory() const {
-    for (const auto& pair : items) {
-        std::cout << "Item: " << pair.second.GetName() 
-                  << "\nDescription: " << pair.second.GetDescription() 
-                  << "\nQuantity: " << pair.second.GetQuantity() 
-                  << "\nWeight: " << pair.second.GetWeight() << "\n\n";
-    }
-}
-
-double InventorySystem::CalculateTotalWeight() const {
-    double totalWeight = 0.0;
-    for (const auto& pair : items) {
-        totalWeight += pair.second.GetWeight() * pair.second.GetQuantity();
-    }
-    return totalWeight;
-}
-
-void InventorySystem::SaveInventory(const std::string& filename) const {
-    std::ofstream file(filename);
-    for (const auto& pair : items) {
-        file << pair.second.GetName() << "," << pair.second.GetDescription() << "," 
-             << pair.second.GetQuantity() << "," << pair.second.GetWeight() << "\n";
-    }
-    file.close();
-}
-
-void InventorySystem::LoadInventory(const std::string& filename) {
-    std::ifstream file(filename);
-    std::string name, description;
-    int quantity;
-    double weight;
-    while (file >> name >> description >> quantity >> weight) {
-        items[name] = InventoryItem(name, description, quantity, weight);
-    }
-    file.close();
+// Function to get the list of items in the inventory
+TArray<FString> AInventorySystem::GetInventoryItems() const
+{
+    return InventoryItems;
 }
