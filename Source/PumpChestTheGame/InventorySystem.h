@@ -1,43 +1,40 @@
-// Written by Juno Suwanduan
+#pragma once
 
-#ifndef INVENTORY_SYSTEM_H
-#define INVENTORY_SYSTEM_H
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "InventorySystem.generated.h"
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <iostream>
+UCLASS()
+class PUMPCHESTTHEGAME_API AInventorySystem : public AActor
+{
+    GENERATED_BODY()
 
-class InventoryItem {
 public:
-    InventoryItem(const std::string& name, const std::string& description, int quantity, double weight);
-    std::string GetName() const;
-    std::string GetDescription() const;
-    int GetQuantity() const;
-    double GetWeight() const;
-    void AddQuantity(int amount);
-    void RemoveQuantity(int amount);
-    void SetWeight(double newWeight);
+    // Sets default values for this actor's properties
+    AInventorySystem();
+
+protected:
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
+
+    // Function to add an item to the inventory
+    void AddItem(FString ItemName);
+
+    // Function to remove an item from the inventory
+    void RemoveItem(FString ItemName);
+
+    // Function to check if the inventory contains an item
+    bool ContainsItem(FString ItemName) const;
+
+    // Function to get the list of items in the inventory
+    TArray<FString> GetInventoryItems() const;
 
 private:
-    std::string name;
-    std::string description;
-    int quantity;
-    double weight;
+    // Array to store the inventory items
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+    TArray<FString> InventoryItems;
 };
-
-class InventorySystem {
-public:
-    void AddItem(const InventoryItem& item);
-    void RemoveItem(const std::string& itemName);
-    InventoryItem* FindItem(const std::string& itemName);
-    void DisplayInventory() const;
-    double CalculateTotalWeight() const;
-    void SaveInventory(const std::string& filename) const;
-    void LoadInventory(const std::string& filename);
-
-private:
-    std::unordered_map<std::string, InventoryItem> items;
-};
-
-#endif
