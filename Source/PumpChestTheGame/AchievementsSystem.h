@@ -1,5 +1,6 @@
-#pragma once
+// WRITTEN BY YATIN WAHI
 
+#pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AchievementsSystem.generated.h"
@@ -8,25 +9,30 @@ USTRUCT(BlueprintType)
 struct FAchievement
 {
     GENERATED_BODY()
-
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     FString AchievementName;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     FString Description;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     bool bIsUnlocked;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     float Progress;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     float MaxProgress;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
     FString UnlockDate;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
+    int32 PointValue;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Achievement")
+    int32 CurrentTier;
 
     FAchievement()
     {
@@ -36,6 +42,8 @@ public:
         Progress = 0.0f;
         MaxProgress = 100.0f;
         UnlockDate = "Not Unlocked Yet";
+        PointValue = 0;
+        CurrentTier = 0;
     }
 };
 
@@ -45,50 +53,75 @@ class PUMPCHESTTHEGAME_API AAchievementsSystem : public AActor
     GENERATED_BODY()
 
 public:
-    // Sets default values for this actor's properties
     AAchievementsSystem();
 
 protected:
-    // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
 public:
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // Function to check and unlock achievements
     UFUNCTION(BlueprintCallable, Category = "Achievements")
     void CheckForAchievementUnlock(FString AchievementName, float ProgressValue);
 
-    // Function to display unlocked achievements
     UFUNCTION(BlueprintCallable, Category = "Achievements")
     void DisplayUnlockedAchievements();
 
-    // Function to reset achievements
     UFUNCTION(BlueprintCallable, Category = "Achievements")
     void ResetAchievements();
 
-    // Function to list all achievements
     UFUNCTION(BlueprintCallable, Category = "Achievements")
     void ListAllAchievements();
 
+    UFUNCTION(BlueprintCallable, Category = "Achievements")
+    void TrackWorkoutMetrics(float WorkoutDuration, float CaloriesBurned, bool PerfectForm);
+
+    UFUNCTION(BlueprintCallable, Category = "Achievements")
+    void UnlockSpecialAchievement(const FString& AchievementName);
+
 private:
-    // Array to store all achievements
     UPROPERTY(EditAnywhere, Category = "Achievements")
     TArray<FAchievement> AchievementsList;
 
-    // Helper function to initialize achievements
+    UPROPERTY(EditAnywhere, Category = "Achievement Progress")
+    float LastProgressUpdateTime;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Progress")
+    float ProgressCheckInterval;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    int32 ConsecutiveWorkoutDays;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    FString LastWorkoutDate;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    float TotalWorkoutTime;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    float MaxCaloriesBurnedInOneSession;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Points")
+    int32 TotalAchievementPoints;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    int32 CurrentStreak;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    int32 LongestStreak;
+
+    UPROPERTY(EditAnywhere, Category = "Achievement Metrics")
+    int32 PerfectWorkouts;
+
     void InitializeAchievements();
-
-    // Helper function to find an achievement by name
     FAchievement* FindAchievementByName(const FString& AchievementName);
-
-    // Function to notify player when an achievement is unlocked
     void NotifyAchievementUnlocked(const FAchievement& UnlockedAchievement);
-
-    // Function to save achievements data (placeholder for future implementation)
-    void SaveAchievementsData();
-
-    // Function to load achievements data (placeholder for future implementation)
-    void LoadAchievementsData();
+    void UpdateAchievementTiers(FAchievement& Achievement);
+    void NotifyTierProgress(const FAchievement& Achievement, int32 Tier);
+    void UpdateDailyProgress();
+    bool IsPlayerWorkingOut();
+    void CheckForMetricBasedAchievements();
+    void CheckForMilestoneAchievements();
+    void SaveAchievementProgress();
+    void LoadAchievementProgress();
 };
